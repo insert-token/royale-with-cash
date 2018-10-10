@@ -1,0 +1,13 @@
+version: "3.6"
+services:
+  gameserver:
+    build:
+      context: .
+      dockerfile: ./docker/gameserver/Dockerfile
+    command: nodemon server.js
+    volumes:
+      - .:/usr/src/app/
+      - /usr/src/app/node_modules
+    restart: always
+    ports:
+      - "80:8000"
