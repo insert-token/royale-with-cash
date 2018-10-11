@@ -1,38 +1,38 @@
 {
-  "name": "battle-royale",
-  "version": "0.0.1",
-  "description": "A 2D multiplayer battle arena using Node.js, Socket.IO, p2.js, and Phaser.",
+  "name": "royal-with-cash",
   "private": true,
-  "main": "server.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/sru/battle-royale.git"
-  },
+  "version": "0.0.0",
+  "description": "a Sails application",
+  "keywords": [],
   "dependencies": {
-    "express": "~4.3.2",
-    "p2": "~0.5.0",
-    "socket.io": "~1.0.2"
+    "sails": "^1.0.2",
+    "grunt": "1.0.1",
+    "sails-hook-grunt": "^3.0.2",
+    "sails-hook-orm": "^2.0.0-16",
+    "sails-hook-sockets": "^1.4.0",
+    "@sailshq/connect-redis": "^3.2.1",
+    "@sailshq/socket.io-redis": "^5.2.0",
+    "@sailshq/lodash": "^3.10.3",
+    "async": "2.0.1",
+    "p2": "~0.5.0"
   },
-  "devDependencies": {},
-  "engines": {
-    "node": "0.10.x"
+  "devDependencies": {
+    "@sailshq/eslint": "^4.19.3"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "NODE_ENV=production node app.js",
+    "test": "npm run lint && npm run custom-tests && echo 'Done.'",
+    "lint": "eslint . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
+    "custom-tests": "echo \"(No other custom tests yet.)\" && echo"
   },
-  "author": "SungRim Huh",
-  "license": "MIT",
-  "jshintConfig": {
-    "camelcase": true,
-    "curly": true,
-    "eqeqeq": true,
-    "forin": true,
-    "indent": 2,
-    "latedef": "nofunc",
-    "unused": true,
-    "undef": false,
-    "sub": true,
-    "node": true
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tink/royal-with-cash.git"
+  },
+  "author": "tink",
+  "license": "",
+  "engines": {
+    "node": ">=9.0"
   }
 }
