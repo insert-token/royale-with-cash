@@ -21,6 +21,19 @@ module.exports = {
         return res.serverError(nope);
       }
 
+      try {
+        user = await User.update({
+          id: user.id
+        } , {
+          paymentAddress: await sails.hooks.game.getUserPaymentAddress(user)
+        }).fetch();
+      }
+      catch(nope){
+        console.log(nope);
+        return res.serverError(nope);
+      }
+
+
       req.session.user = user;
       req.session.save();
 

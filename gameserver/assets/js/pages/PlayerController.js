@@ -12,9 +12,7 @@ let vm = new Vue({
   },
   mounted: function() {
 
-    this.updateIntervalId = setInterval(()=>{
-      this.players = window.g.remotePlayers.concat([ window.g.localPlayer ])
-    }, 1000);
+    this.updateIntervalId = setInterval(this.updatePlayers, 1000);
 
     io.socket.on('inputName', () => {
       var playerName = prompt('Please enter your name.') || 'Greg Maxwell';
@@ -34,6 +32,8 @@ let vm = new Vue({
     });
   },
   methods: {
-
+    updatePlayers: function() {
+      this.players = window.g.remotePlayers.concat([ window.g.localPlayer ]);
+    }
   }
 });

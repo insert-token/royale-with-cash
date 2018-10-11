@@ -34,6 +34,11 @@ module.exports = {
     paymentAddress: {
       type: 'string',
       required: false
+    },
+
+    txid: {
+      type: 'string',
+      required: false
     }
 
   },

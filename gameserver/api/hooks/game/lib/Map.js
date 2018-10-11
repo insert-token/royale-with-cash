@@ -78,7 +78,6 @@ Map.prototype.getRandomPosition = function getRandomPosition() {
  * A player joined the map
  */
 Map.prototype.addPlayer = function addPlayer(player) {
-console.log('adding player',player);
 
   this.players.push(player);
   this.world.addBody(player.body);
@@ -105,7 +104,6 @@ Map.prototype.respawn = function respawn(somePlayer) {
  * A player left the map
  */
 Map.prototype.removePlayer = function removePlayer(player) {
-console.log('removing',player);
   this.players.splice(this.players.indexOf(player), 1);
   this.world.removeBody(player.body);
 };

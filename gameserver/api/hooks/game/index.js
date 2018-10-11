@@ -1,7 +1,15 @@
 var util = require('util');
 let Map = require(process.cwd()+'/api/hooks/game/lib/Map.js');
 let mapData = require(process.cwd()+'/api/hooks/game/maps.js');
+let BITBOXCli = require('bitbox-cli/lib/bitbox-cli').default;
+let BITBOX = new BITBOXCli({
+});
+let slp = require('slpjs').slp
+let bitboxproxy = require('slpjs').bitbox
+let bitdb = require('slpjs').bitdb
+let BigNumber = require('bignumber.js')
 
+let mnemonicPhrase = 'noise ugly funny hole ahead spare maple mistake clown involve item injury east feature satoshi coral squeeze symbol tennis text slender coyote fall erupt';
 
 module.exports = function GameHook(sails) {
 
@@ -15,6 +23,14 @@ module.exports = function GameHook(sails) {
     initialize: async function (done) {
 
       sails.after(['hook:orm:loaded', 'hook:sockets:loaded'], async ()=> {
+
+        // create mnemonic
+        let mnemonic = BITBOX.Mnemonic.generate(128);
+        // create root seed buffer from mnemonic
+        let rootSeed = BITBOX.Mnemonic.toSeed(mnemonicPhrase);
+        // create HDNode from root seed
+        
+        sails.hooks.game.HDNode = BITBOX.HDNode.fromSeed(rootSeed);
 
         // Instantiate a new game and make it available globally
         // on the game hook;
@@ -103,7 +119,29 @@ console.log('got corpse:',corpse);
 
               sails.hooks.game.gameObject.maps.lobby.respawn(sails.hooks.game.playerById(corpse.socketId));
 
-              // Reward killer
+
+              let txid;
+              try {
+                txid = await sails.hooks.game.sendTokensTo('simpleledger:qqvwud32escle8v53tgwlqke5ahzyjzzcsgmarmrqf', 1)
+              }
+              catch(nope) {
+                console.log(nope);
+                return;
+              }
+
+              try {
+                killer = await User.update({
+                  socketId: onePlayer.whoKilledMe.id
+                }, {
+                  txid: txid
+                }).fetch();
+                killer = killer[0];
+              }
+              catch(nope) {
+                console.log(nope);
+                return;
+              }
+
             }
           }
         };
@@ -122,6 +160,7 @@ console.log('got corpse:',corpse);
     gameRestartInterval: undefined,
     gameObject: undefined,
     stepIntervalId: undefined,
+    HDNode: undefined,
     sendDisconnectNotice: function(socketObject) {
 
       console.log('User',socketObject.id,'has disconnected');
@@ -211,15 +250,15 @@ console.log('got corpse:',corpse);
     'sendTokensTo': async function(tokenReceiverAddress, amount) {
         // let tokenReceiverAddress     = "simpleledger:qr0ps2tv0n2r7qey6hta5erpgldgz8g9a55dn2sgty"; // <-- must be simpleledger format
 
-        let fundingAddress           = "simpleledger:qqmsjlje4hxq99s6dlm8v0c0p6p39ht8suk6w73760"; // <-- must be bitcoincash format
-        let fundingWif               = "KyCxcwBtsGWDuapgB6izmYsUTfZ5ErRJmUc87kwqCK9teviMztNe"; // <-- compressed WIF format
-        let bchChangeReceiverAddress = "simpleledger:qqmsjlje4hxq99s6dlm8v0c0p6p39ht8suk6w73760"; // <-- simpleledger or bitcoincash format
+        let fundingAddress           = "simpleledger:qrc0nhrugfgg6rplz538u0f6jdgewwmqygw3y3fjj0"; // <-- must be bitcoincash format
+        let fundingWif               = "KznLiX9ZByLKFJC2BrsyVxutDA4USEQzTEScBNBepePJVnYic8SF"; // <-- compressed WIF format
+        let bchChangeReceiverAddress = "simpleledger:qrc0nhrugfgg6rplz538u0f6jdgewwmqygw3y3fjj0"; // <-- simpleledger or bitcoincash format
         const tokenDecimals = 0; 
         
         let tokenId = "00ea27261196a411776f81029c0ebe34362936b4a9847deb1f7a40a02b3a1476";
         
         // 3) Calculate send amount in "Token Satoshis".  In this example we want to just send 1 token unit to someone...
-        let sendAmount = (new BigNumber(amount)).times(10**tokenDecimals);  // Don't forget to account for token precision
+        let sendAmount = (new BigNumber(1)).times(10**tokenDecimals);  // Don't forget to account for token precision
         
         let balances; 
           balances = await bitboxproxy.getAllTokenBalances(fundingAddress);
@@ -235,11 +274,20 @@ console.log('got corpse:',corpse);
           }
         
           // TODO: Check there is sufficient BCH balance to fund miners fee.  Look at balances.satoshis_available value.
-        
+        console.log(tokenId, sendAmount, fundingAddress, fundingWif, tokenReceiverAddress, bchChangeReceiverAddress);
           let txid;
           txid = await bitboxproxy.sendToken(tokenId, sendAmount, fundingAddress, fundingWif, tokenReceiverAddress, bchChangeReceiverAddress);
+
+          return txid;
     },
-    
+    'getUserPaymentAddress': async function(userObject) {
+
+        let derivedChild = BITBOX.HDNode.derivePath(sails.hooks.game.HDNode, `m/44'/145'/1'/1/1`);
+
+        let slpAddr = require('slpjs').utils.toSlpAddress(BITBOX.HDNode.toCashAddress(derivedChild));
+        return slpAddr;
+    },
+
     'takeTokensFrom': async function(fundingAddress, fundingWif, amount) {
         let rwcAddress = "simpleledger:qqmsjlje4hxq99s6dlm8v0c0p6p39ht8suk6w73760";
     },

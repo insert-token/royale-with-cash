@@ -4,7 +4,7 @@
   <div class="container">
     <div class="row">
       <div class="col-sm">
-        <h3 v-if="user.name">Game Statistics | Username: {{ user.name }}</h3>
+        <h3 v-if="user && user.name">Game Statistics | Username: {{ user.name }}</h3>
         <table class="table table-sm">
           <thead>
             <tr>
@@ -15,13 +15,13 @@
               <th scope="col">Tx Link</th>
             </tr>
           </thead>
-          <tbody>
-            <tr v-for="player in players">
+          <tbody v-if="players&&players.length">
+            <tr v-for="player of players">
               <td>{{ player.name }}</td>
               <td>{{ player.kills }}</td>
               <td>{{ player.tokens }}</td>
               <td>{{ player.alive }}</td>
-              <td><a href="{{ player.txlink }}" _blank="target">txlink</a></td>
+              <!-- <td><a :href="player.txid" _blank="target">txid</a></td> -->
             </tr>
           </tbody>
         </table>
