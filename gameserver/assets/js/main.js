@@ -19,7 +19,7 @@
 
   // Set player configuration
   g.sid = '';
-  g.playerName = 'Player';
+  g.playerName = '';
   g.localPlayer = null;
   g.isLeader = false;
   g.mapId = 'lobby';
@@ -44,11 +44,11 @@
   // a current copy of the map.
   function onSocketConnected(data) {
     g.sid = data.id;
-    // Set player name
-    // g.playerName = data.name;
+    g.playerName = data.name;
   }
 
   function onGetMap(data) {
+console.log('Got map data', data);
     if (data.map) {
       g.mapData[data.mapId] = data.map;
       if (!g.initialized) {
@@ -63,7 +63,6 @@
 
 
   function onNewPlayer(data) {
-console.log('got player');
     g.toAdd.push(data);
   }
 
@@ -227,15 +226,6 @@ console.log('got player');
     middleText.fontSize = 54;
     middleText.align = 'center';
 
-    // Buttons
-    $('#startButton').click(function onClick() {
-      io.socket.post('/startGame', { mapId: g.mapId });
-    });
-
-    $('#resetButton').click(function onClick() {
-      io.socket.post('/resetGame', { mapId: g.mapId });
-    });
-
     g.initialized = true;
   }
 
@@ -292,7 +282,7 @@ console.log('got player');
 
   function addPlayer(x, y, id) {
     var player = game.add.group();
-    player.name = 'Player';
+    player.name = '';
     player.id = id;
     player.x = x;
     player.y = y;

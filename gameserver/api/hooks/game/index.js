@@ -48,6 +48,7 @@ module.exports = function GameHook(sails) {
 
       return done();
     },
+    gameRestartInterval: undefined,
     gameObject: undefined,
     stepIntervalId: undefined,
     sendDisconnectNotice: function(socketObject) {

@@ -117,7 +117,7 @@ module.exports = {
 
   },
   startGame: function(req, res) {
-    console.log('startGame');
+
     let data = req.allParams();
 
     if (!sails.hooks.game.gameObject.maps[data.mapId]) {
