@@ -10,62 +10,38 @@
 </head>
 
 <body>
-  <div id="screen">
-    <div id="input">
-      <button id="startButton" type="button" class="btn btn-success" disabled>Start</button>
-      <button id="resetButton" type="button" class="btn btn-primary" disabled>Reset</button>
-    </div>
-  </div>
+  <div id="screen"></div>
   <div id="screen-info">
-    <span v-bind:title="message">
-      Hover your mouse over me for a few seconds
-      to see my dynamically bound title!
-    </span>
     <div class="container">
       <div class="row">
         <div class="col-sm">
-          <h3>Current Game</h3>
+          <h3>Game Statistics</h3>
           <table class="table table-sm">
             <thead>
               <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Token(s)</th>
                 <th scope="col">Alive?</th>
+                <th scope="col">Tx Link</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>Matt</td>
-                <td>0</td>
+                <td>2</td>
                 <td><span class="badge badge-secondary">DEAD</span></td>
-              </tr>
-              <tr>
-                <td>BCH</td>
-                <td>0</td>
-                <td><span class="badge badge-success">ALIVE</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="col-sm">
-          <h3>Latest Games</h3>
-          <table class="table table-sm">
-            <thead>
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Token(s)</th>
-                <th scope="col">TX Link</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Matt</td>
-                <td>20</td>
                 <td>link</td>
               </tr>
               <tr>
-                <td>Matt</td>
-                <td>10</td>
+                <td>Rob</td>
+                <td>0</td>
+                <td><span class="badge badge-success">ALIVE</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Nick</td>
+                <td>5</td>
+                <td><span class="badge badge-secondary">DEAD</span></td>
                 <td>link</td>
               </tr>
             </tbody>
