@@ -17,6 +17,12 @@
   io.socket.on('resetGame', onResetGame);
   // io.socket.on('announceWinner', onAnnounceWinner);
   io.socket.on('death', function(deadGuy) {
+    if (deadGuy.id === window.g.localPlayer.id) {
+      $('html').html('<div style="font-size:6rem;color:black">YOU DED</div>');
+      window.setTimeout(function(){
+        window.location.href='./';
+      },2000);
+    }
     console.log('Im dead');
     console.log(deadGuy);
   });
