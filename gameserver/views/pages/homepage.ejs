@@ -4,8 +4,8 @@
   <div class="container">
     <div class="row">
       <div class="col-sm">
-        <h3 v-if="user && user.name">Game Statistics | Username: {{ user.name }}</h3>
-        <table class="table table-sm">
+        <h3 v-if="user && user.name">{{ user.name }}</h3>
+        <table class="table table-sm" v-if="false">
           <thead>
             <tr>
               <th scope="col">Player Name</th>

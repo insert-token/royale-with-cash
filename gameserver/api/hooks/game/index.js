@@ -66,17 +66,17 @@ module.exports = function GameHook(sails) {
               let killer;
               try {
                 killer = await User.findOne({
-                  socketId: onePlayer.whoKilledMe.id
+                  socketId: onePlayer.whoKilledMe && onePlayer.whoKilledMe.id
                 });
               }
               catch(nope) {
                 console.log(nope);
                 return;
               }
-console.log('got killer:',killer);
+
               try {
                 killer = await User.update({
-                  socketId: onePlayer.whoKilledMe.id
+                  socketId: onePlayer.whoKilledMe && onePlayer.whoKilledMe.id
                 }, {
                   kills: killer.kills+1
                 }).fetch();
@@ -84,11 +84,9 @@ console.log('got killer:',killer);
               }
               catch(nope) {
                 console.log(nope);
-                return;
+                // return;
               }
-console.log('updated killer:',killer);
 
-console.log('want corpse:',onePlayer.id);
 
               let corpse;
               try {
@@ -98,9 +96,8 @@ console.log('want corpse:',onePlayer.id);
               }
               catch(nope) {
                 console.log(nope);
-                return;
+                // return;
               }
-console.log('got corpse:',corpse);
 
               try {
                 corpse = await User.update({
@@ -112,12 +109,8 @@ console.log('got corpse:',corpse);
               }
               catch(nope) {
                 console.log(nope);
-                return;
+                // return;
               }
-
-              console.log('attempting respawn of',corpse.socketId);
-
-              sails.hooks.game.gameObject.maps.lobby.respawn(sails.hooks.game.playerById(corpse.socketId));
 
 
               let txid;
@@ -131,7 +124,7 @@ console.log('got corpse:',corpse);
 
               try {
                 killer = await User.update({
-                  socketId: onePlayer.whoKilledMe.id
+                  socketId: onePlayer.whoKilledMe && onePlayer.whoKilledMe.id
                 }, {
                   txid: txid
                 }).fetch();
