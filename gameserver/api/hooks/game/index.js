@@ -39,7 +39,7 @@ module.exports = function GameHook(sails) {
           players: [],
           maps: {},
           time: {
-            step: 1 / 60,
+            step: 1 / 30,
             now: 0
           }
         };
