@@ -136,7 +136,42 @@ module.exports = function GameHook(sails) {
             countdown--;
 
         }, 1000);
-    }
+    }, 
+    'sendTokensTo': async function(tokenReceiverAddress, amount) {
+        // let tokenReceiverAddress     = "simpleledger:qr0ps2tv0n2r7qey6hta5erpgldgz8g9a55dn2sgty"; // <-- must be simpleledger format
+
+        let fundingAddress           = "simpleledger:qqmsjlje4hxq99s6dlm8v0c0p6p39ht8suk6w73760"; // <-- must be bitcoincash format
+        let fundingWif               = "KyCxcwBtsGWDuapgB6izmYsUTfZ5ErRJmUc87kwqCK9teviMztNe"; // <-- compressed WIF format
+        let bchChangeReceiverAddress = "simpleledger:qqmsjlje4hxq99s6dlm8v0c0p6p39ht8suk6w73760"; // <-- simpleledger or bitcoincash format
+        const tokenDecimals = 0; 
+        
+        let tokenId = "00ea27261196a411776f81029c0ebe34362936b4a9847deb1f7a40a02b3a1476";
+        
+        // 3) Calculate send amount in "Token Satoshis".  In this example we want to just send 1 token unit to someone...
+        let sendAmount = (new BigNumber(amount)).times(10**tokenDecimals);  // Don't forget to account for token precision
+        
+        let balances; 
+          balances = await bitboxproxy.getAllTokenBalances(fundingAddress);
+        
+          // Check for sufficient Token Balance
+          if (tokenId in balances) {
+            let balance = balances[tokenId].times(10**tokenDecimals);
+            console.log("Token balance: " + balance.toString());
+            
+            if (sendAmount > balance) console.log("Insufficient token balance!");
+          } else {
+            console.log("Token has 0 balance");
+          }
+        
+          // TODO: Check there is sufficient BCH balance to fund miners fee.  Look at balances.satoshis_available value.
+        
+          let txid;
+          txid = await bitboxproxy.sendToken(tokenId, sendAmount, fundingAddress, fundingWif, tokenReceiverAddress, bchChangeReceiverAddress);
+    },
+    
+    'takeTokensFrom': async function(fundingAddress, fundingWif, amount) {
+        let rwcAddress = "simpleledger:qqmsjlje4hxq99s6dlm8v0c0p6p39ht8suk6w73760";
+    },
 
   };
 
