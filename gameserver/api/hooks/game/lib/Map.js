@@ -80,6 +80,11 @@ Map.prototype.getRandomPosition = function getRandomPosition() {
 Map.prototype.addPlayer = function addPlayer(player) {
   this.players.push(player);
   this.world.addBody(player.body);
+
+  if (this.players.length >= 2) {
+    //enough players to start the game.
+    sails.hooks.game.startGame('lobby');
+  }
 };
 
 
@@ -189,10 +194,10 @@ Map.prototype.bindUpdateEvent = function bindUpdateEvent(socketBroadcastFunction
       players: that.players.map(function(player) { return player.serialize(); })
     });
 
-    var player = that.findWinner();
-    if (player) {
-      socketBroadcastFunction(that.mapId, 'announceWinner', player.serialize());
-    }
+    // var player = that.findWinner();
+    // if (player) {
+    //   socketBroadcastFunction(that.mapId, 'announceWinner', player.serialize());
+    // }
   });
 };
 

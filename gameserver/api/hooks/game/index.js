@@ -88,6 +88,54 @@ module.exports = function GameHook(sails) {
         }
       }
       return false;
+    },
+    startGame: function(mapId) {
+      if (!sails.hooks.game.gameObject.maps[mapId]) {
+        util.log('Map not found: ' + mapId);
+        return;
+      }
+  
+      var countdown = 4;
+  
+      if (sails.hooks.game.gameObject.maps[mapId].isStarting || sails.hooks.game.gameObject.maps[mapId].started) {
+        return;
+      }
+  
+      if (!sails.hooks.game.gameObject.maps[mapId].isStarting) {
+        sails.hooks.game.gameObject.maps[mapId].isStarting = true;
+      }
+  
+        var startCountdown = setInterval(function() {
+            var text;
+            switch (countdown) {
+                case 4:
+                    text = 'Game is starting ...';
+                    break;
+                case 3:
+                    text = '3';
+                    break;
+                case 2:
+                    text = '2';
+                    break;
+                case 1:
+                    text = '1';
+                    break;
+                case 0:
+                    text = 'Start!';
+                    break;
+            }
+
+            if (text) {
+                sails.sockets.broadcast(mapId, 'startGameCountdown', text);
+                if (text === 'Start!') {
+                    sails.hooks.game.gameObject.maps[mapId].start();
+                    clearInterval(startCountdown);
+                }
+            }
+
+            countdown--;
+
+        }, 1000);
     }
 
   };
