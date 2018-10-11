@@ -4,24 +4,26 @@
   <div class="container">
     <div class="row">
       <div class="col-sm">
-        <h3 v-if="user.name">Game Statistics for {{ user.name }}</h3>
+        <h3 v-if="user.name">Game Statistics | Username: {{ user.name }}</h3>
         <table class="table table-sm">
           <thead>
             <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Kill/Death Ratio</th>
+              <th scope="col">Player Name</th>
+              <th scope="col">Kill(s)</th>
               <th scope="col">Token(s)</th>
+              <th scope="col">Created</th>
               <th scope="col">Alive?</th>
               <th scope="col">Tx Link</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="p in players">
-              <td>{{ p.name }}</td>
-              <td>{{ p.kdr }}</td>
-              <td>{{ p.tokens }}</td>
-              <td>{{ p.alive }}</td>
-              <td>{{ p.txlink }}</td>
+            <tr v-for="player in players">
+              <td>{{ player.name }}</td>
+              <td>{{ player.kills }}</td>
+              <td>{{ player.tokens }}</td>
+              <td>{{ new Date() }}</td>
+              <td>{{ player.alive }}</td>
+              <td><a href="{{ player.txlink }}" _blank="target">txlink</a></td>
             </tr>
           </tbody>
         </table>
