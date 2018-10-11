@@ -60,13 +60,15 @@ module.exports.sockets = {
   *                                                                          *
   ***************************************************************************/
 
-  // afterDisconnect: function(session, socket, done) {
-  //
-  //   // By default: do nothing.
-  //   // (but always trigger the callback)
-  //   return done();
-  //
-  // },
+  afterDisconnect: function(session, socket, done) {
+
+    sails.hooks.game.sendDisconnectNotice(socket);
+  
+    // By default: do nothing.
+    // (but always trigger the callback)
+    return done();
+  
+  },
 
 
   /***************************************************************************

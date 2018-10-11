@@ -1,24 +1,60 @@
+let util = require('util');
 let Player = require(process.cwd()+'/api/hooks/game/lib/Player.js');
 
 module.exports = {
-  playerConnected: function(req, res) {
-
+  playerConnected: async function(req, res) {
 
     let data = req.allParams();
 
     let socket = req.socket;
-    console.log('Player', socket.id, 'connected');
 
-    sails.sockets.join(req, socket.id, (err) => {
-      if (err) {
-        console.log('Error registering user websocket connection:', err);
-        throw (err);
+    let user;
+    if (!req.session.user) {
+
+      try {
+        user = await User.create({
+          socketId: req.socket.id
+        }).fetch();
+      }
+      catch(nope){
+        console.log(nope);
+        return res.serverError(nope);
       }
 
+      req.session.user = user;
+      req.session.save();
 
-      sails.sockets.broadcast(socket.id, 'connected', { id: socket.id });
+      sails.sockets.broadcast(req.socket.id, 'inputName');
+
+      return res.ok(user);
+
+    }
+    else {
+
+      try {
+        user = await User.update({
+          id: req.session.user.id
+        }, {
+          socketId: req.socket.id
+        }).fetch();
+        user = user[0];
+      }
+      catch(nope) {
+        console.log(nope);
+        return res.serverError(nope);
+      }
+
+      try {
+        await sails.sockets.join(req, socket.id);
+      }
+      catch(nope){
+        console.log(nope);
+        return res.serverError(nope);
+      }
 
       sails.hooks.game.gameObject.players.push(new Player({ id: socket.id }));
+
+      sails.sockets.broadcast(socket.id, 'connected', { id: socket.id, name: user.name });
 
       // Check every map in our /lib/maps.js file to see if it's the one
       // our game is currently using.
@@ -28,11 +64,57 @@ module.exports = {
         }
       }
 
-    });
+      return res.ok(user);
 
-    return res.ok({
-      we: 'ready'
-    });
+    }
+
+  },
+  setPlayerName: async function(req, res) {
+
+    let data = req.allParams();
+    console.log('setting player name', data);
+
+    let socket = req.socket;
+
+    let user;
+    try {
+      user = await User.update({
+        id: req.session.user.id
+      }, {
+        name: data.name
+      }).fetch();
+      user = user[0];
+    }
+    catch(nope) {
+      console.log(nope);
+    }
+
+
+    try {
+      await sails.sockets.join(req, socket.id);
+    }
+    catch(nope){
+      console.log(nope);
+      return res.serverError(nope);
+    }
+
+    req.session.user = user;
+    req.session.save();
+
+    sails.hooks.game.gameObject.players.push(new Player({ id: socket.id }));
+
+    sails.sockets.broadcast(socket.id, 'connected', { id: socket.id, name: user.name });
+
+    // Check every map in our /lib/maps.js file to see if it's the one
+    // our game is currently using.
+    for (var map in sails.hooks.game.gameObject.maps) {
+      if (sails.hooks.game.gameObject.maps.hasOwnProperty(map)) {
+        sails.hooks.game.gameObject.maps[map].bindUpdateEvent(sails.sockets.broadcast);
+      }
+    }
+
+    return res.ok(user);
+
   },
   startGame: function(req, res) {
     console.log('startGame');
@@ -112,13 +194,7 @@ module.exports = {
 
     player.updateKeys(data);
   },
-  setPlayerName: function(req, res) {
-    console.log('setPlayerName');
 
-    let data = req.allParams();
-
-    sails.hooks.game.playerById(req.socket.id).name = data.name;
-  },
   getMap: function(req, res) {
     console.log('getMap');
 

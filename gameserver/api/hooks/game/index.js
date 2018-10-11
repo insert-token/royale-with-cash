@@ -48,9 +48,29 @@ module.exports = function GameHook(sails) {
 
       return done();
     },
-
     gameObject: undefined,
     stepIntervalId: undefined,
+    sendDisconnectNotice: function(socketObject) {
+
+      console.log('User',socketObject.id,'has disconnected');
+      let player = sails.hooks.game.playerById(socketObject.id);
+      if (!player) {
+        util.log("Player not found: " + socketObject.id);
+        return;
+      }
+
+      sails.hooks.game.gameObject.players.splice(sails.hooks.game.gameObject.players.indexOf(player), 1);
+      sails.sockets.broadcast(player.mapId, 'removePlayer', { id: socketObject.id });
+
+      if (!sails.hooks.game.gameObject.maps[player.mapId]) {
+        util.log("Map not found: " + player.mapId);
+        return;
+      }
+
+      player.leaveMap(sails.hooks.game.gameObject.maps[player.mapId]);
+
+      return;
+    },
     step: function() {
       var now = Date.now();
       if (!sails.hooks.game.gameObject.time.now) {

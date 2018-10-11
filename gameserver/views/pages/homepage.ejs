@@ -4,7 +4,7 @@
   <div class="container">
     <div class="row">
       <div class="col-sm">
-        <h3>Game Statistics</h3>
+        <h3 v-if="user.name">Game Statistics for {{ user.name }}</h3>
         <table class="table table-sm">
           <thead>
             <tr>

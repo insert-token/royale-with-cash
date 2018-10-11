@@ -5,7 +5,7 @@
   g.HEIGHT = 600;
 
   // Instantiate a new game and set the canvas size
-  var game = g.game = new Phaser.Game(g.WIDTH, g.HEIGHT, Phaser.AUTO, 'screen');
+  window.game = g.game = new Phaser.Game(g.WIDTH, g.HEIGHT, Phaser.AUTO, 'screen');
 
   // Start listening for the following websocket events.
   io.socket.on('connected', onSocketConnected);
@@ -17,16 +17,9 @@
   io.socket.on('resetGame', onResetGame);
   io.socket.on('announceWinner', onAnnounceWinner);
 
-
-  // Tell the socket we're here and fetch any session
-  // data that has been stored for the user.
-  io.socket.get('/check-in', (serverResponse) => {
-    console.log('And the server says:',serverResponse);
-  });
-
   // Set player configuration
   g.sid = '';
-  g.playerName = '';
+  g.playerName = 'Player';
   g.localPlayer = null;
   g.isLeader = false;
   g.mapId = 'lobby';
@@ -46,18 +39,14 @@
     }
   });
 
-
   // Once the websockets connection has been fully established,
   // tell the server about the player.  Also ask the server for
   // a current copy of the map.
   function onSocketConnected(data) {
     g.sid = data.id;
     // Set player name
-    g.playerName = prompt('Please enter your name.') || 'Player';
-    io.socket.post('/setPlayerName', { name: g.playerName });
-    io.socket.post('/getMap', { mapId: g.mapId });
+    // g.playerName = data.name;
   }
-
 
   function onGetMap(data) {
     if (data.map) {
@@ -74,6 +63,7 @@
 
 
   function onNewPlayer(data) {
+console.log('got player');
     g.toAdd.push(data);
   }
 
@@ -142,7 +132,7 @@
     var player = playerById(data.id);
 
     if (!player) {
-      console.log('Player not found: ' + playerData.id);
+      console.log('Player not found: ' + data);
       return;
     }
 
