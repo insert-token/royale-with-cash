@@ -2,7 +2,6 @@ let vm = new Vue({
   el: '#home-wrap',
   data: {
     players: [],
-    kills: 0,
     user: {
       name: ''
     },

@@ -11,7 +11,6 @@
               <th scope="col">Player Name</th>
               <th scope="col">Kill(s)</th>
               <th scope="col">Token(s)</th>
-              <th scope="col">Created</th>
               <th scope="col">Alive?</th>
               <th scope="col">Tx Link</th>
             </tr>
@@ -21,7 +20,6 @@
               <td>{{ player.name }}</td>
               <td>{{ player.kills }}</td>
               <td>{{ player.tokens }}</td>
-              <td>{{ new Date() }}</td>
               <td>{{ player.alive }}</td>
               <td><a href="{{ player.txlink }}" _blank="target">txlink</a></td>
             </tr>
