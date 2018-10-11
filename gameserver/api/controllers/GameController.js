@@ -2,22 +2,21 @@ let Player = require(process.cwd()+'/api/hooks/game/lib/Player.js');
 
 module.exports = {
   playerConnected: function(req, res) {
-    console.log('playerConnected');
+
+
     let data = req.allParams();
 
     let socket = req.socket;
-    console.log('we ready:',socket.id);
+    console.log('Player', socket.id, 'connected');
 
-    sails.sockets.join(req, [socket.id, 'game'], (err) => {
+    sails.sockets.join(req, socket.id, (err) => {
       if (err) {
         console.log('Error registering user websocket connection:', err);
         throw (err);
       }
 
-      console.log('We in:',socket.id);
 
-      sails.sockets.blast('connected', { id: socket.id });
-
+      sails.sockets.broadcast(socket.id, 'connected', { id: socket.id });
 
       sails.hooks.game.gameObject.players.push(new Player({ id: socket.id }));
 
@@ -39,7 +38,6 @@ module.exports = {
     console.log('startGame');
     let data = req.allParams();
 
-    console.log('WE ARE STARTING THE GAME', data);  
     if (!sails.hooks.game.gameObject.maps[data.mapId]) {
       util.log('Map not found: ' + data.mapId);
       return;
@@ -89,7 +87,7 @@ module.exports = {
     }, 1000);
   },
   resetGame: function(req, res) {
-    console.log('resetGame');
+    console.log('Resetting the game');
 
     let data = req.allParams();
 
@@ -99,13 +97,12 @@ module.exports = {
     }
 
     sails.hooks.game.gameObject.maps[data.mapId].reset();
-    sails.sockets.broadcast(mapId, data.mapId, 'resetGame');
+    sails.sockets.broadcast(req.socket.id, data.mapId, 'resetGame');
 
   },
   updatePlayer: function(req, res) {
 
     let data = req.allParams();
-    console.log('updatePlayer', data);
 
     var player = sails.hooks.game.playerById(req.socket.id);
     if (!player) {
@@ -120,7 +117,6 @@ module.exports = {
 
     let data = req.allParams();
 
-    console.log('SETTING PLAYER NAME!');
     sails.hooks.game.playerById(req.socket.id).name = data.name;
   },
   getMap: function(req, res) {
@@ -133,7 +129,7 @@ module.exports = {
       return;
     }
 
-    sails.sockets.blast('getMap', sails.hooks.game.gameObject.maps[data.mapId].serialize());
+    sails.sockets.broadcast(req.socket.id, 'getMap', sails.hooks.game.gameObject.maps[data.mapId].serialize());
 
   },
   newPlayer: function(req, res) {
@@ -156,7 +152,7 @@ module.exports = {
 
     // Send existing players to the new player
     for (var i = 0, p = sails.hooks.game.gameObject.maps[data.mapId].players; i < p.length; i++) {
-      sails.sockets.blast('newPlayer', p[i].serialize());
+      sails.sockets.broadcast(req.socket.id, 'newPlayer', p[i].serialize());
     }
 
     sails.sockets.join(req, data.mapId);
