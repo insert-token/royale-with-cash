@@ -1,21 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Battle Royale</title>
+  <title>Royale With Cash</title>
 
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/main.css" media="screen">
 </head>
+
 <body>
   <div id="screen">
     <div id="input">
-      <button id="startButton" type="button" disabled>Start</button>
-      <button id="resetButton" type="button" disabled>Reset</button>
+      <button id="startButton" type="button" class="btn btn-success" disabled>Start</button>
+      <button id="resetButton" type="button" class="btn btn-primary" disabled>Reset</button>
     </div>
   </div>
+  <div id="screen-info">
+    <span v-bind:title="message">
+      Hover your mouse over me for a few seconds
+      to see my dynamically bound title!
+    </span>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm">
+          <h3>Current Game</h3>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Token(s)</th>
+                <th scope="col">Alive?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Matt</td>
+                <td>0</td>
+                <td><span class="badge badge-secondary">DEAD</span></td>
+              </tr>
+              <tr>
+                <td>BCH</td>
+                <td>0</td>
+                <td><span class="badge badge-success">ALIVE</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-sm">
+          <h3>Latest Games</h3>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Token(s)</th>
+                <th scope="col">TX Link</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Matt</td>
+                <td>20</td>
+                <td>link</td>
+              </tr>
+              <tr>
+                <td>Matt</td>
+                <td>10</td>
+                <td>link</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="lib/jquery-2.1.1.min.js"></script>
   <script src="lib/phaser.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    let app = new Vue({
+      el: '#screen-info',
+      data: {
+        message: 'You loaded this page on ' + new Date().toLocaleString()
+      }
+    })
+  </script>
 </body>
+
 </html>

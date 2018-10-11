@@ -41,6 +41,7 @@
     g.socket.on('startGameCountdown', onStartGameCountdown);
     g.socket.on('resetGame', onResetGame);
     g.socket.on('announceWinner', onAnnounceWinner);
+    g.socket.on('gameready', onGameReady);
   }
 
 
@@ -169,6 +170,25 @@
     g.hud.getAt(g.hud.middleText).text = '';
   }
 
+  function onGameReady(gameInfo) {
+    let gameData = {
+      players: [
+        {
+          name: 'Bill Johnsons',
+          socketId: '897eyuff74rt86etdufho'
+        },
+        {
+          name: 'BILLY J',
+          socketId: '0124988jfrt'
+        },
+        {
+          name: 'MARY J',
+          socketID: '01122222'
+        }
+      ]
+    }
+    
+  };
 
   function onAnnounceWinner(data) {
     if (data.id === g.sid) {

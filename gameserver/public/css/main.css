@@ -1,6 +1,6 @@
 body {
-  background-color: #000;
-  color: #fff;
+  background-color: #ffffff;
+  color: #000000;
 
   /* Allow mouse draggin. */
   -moz-user-select: none;
@@ -8,21 +8,25 @@ body {
   -o-user-select: none;
   -webkit-user-select: none;
   user-select: none;
-
   margin: 0;
 }
 
 #input {
   position: fixed;
   float: left;
-  margin-top: 10px;
-  margin-left: 10px;
+  margin: 50px;
 }
 
 #screen {
-  position: fixed;
+  position: relative;
   width: 100%;
   height: 100%;
+}
+
+#screen-info {
+  align-content: center;
+  margin: 25px;
+  padding: 25px;
 }
 
 #screen canvas {
