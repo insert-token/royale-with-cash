@@ -15,7 +15,11 @@
   io.socket.on('removePlayer', onRemovePlayer);
   io.socket.on('startGameCountdown', onStartGameCountdown);
   io.socket.on('resetGame', onResetGame);
-  io.socket.on('announceWinner', onAnnounceWinner);
+  // io.socket.on('announceWinner', onAnnounceWinner);
+  io.socket.on('death', function(deadGuy) {
+    console.log('Im dead');
+    console.log(deadGuy);
+  });
 
   // Set player configuration
   g.sid = '';

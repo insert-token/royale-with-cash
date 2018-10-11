@@ -44,6 +44,15 @@ module.exports = {
         return res.serverError(nope);
       }
 
+console.log('got it?',req.session.user);
+      req.session.user = undefined;
+      req.session.save();
+
+      if (!user) {
+        return res.redirect('/check-in');
+      }
+
+
       try {
         await sails.sockets.join(req, socket.id);
       }

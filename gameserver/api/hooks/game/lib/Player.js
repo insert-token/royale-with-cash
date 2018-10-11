@@ -12,6 +12,9 @@ function Player(config) {
    */
   this.id = config.id || '';
 
+  this.isDying = false;
+  this.whoKilledMe = {};
+
   /**
    * player name.
    */
@@ -248,6 +251,11 @@ Player.prototype.damageWith = function damageWith(other) {
     }
 
     this.health -= damage;
+
+    if (this.health <= 0) {
+      this['whoKilledMe'] = other.serialize();
+    }
+
   }
 };
 
@@ -265,7 +273,8 @@ Player.prototype.serialize = function serialize() {
     attacking: this.attacking,
     blocking: this.blocking,
     health: this.health,
-    moving: this.moving
+    moving: this.moving,
+    whoKilledMe: this.whoKilledMe.id
   };
 };
 

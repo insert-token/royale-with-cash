@@ -40,6 +40,76 @@ module.exports = function GameHook(sails) {
 
         sails.hooks.game.stepIntervalId = setInterval(sails.hooks.game.step, 1000 * sails.hooks.game.gameObject.time.step);
 
+        let searchForDead = async function(){
+          for (let onePlayer of sails.hooks.game.gameObject.players) {
+            if (!onePlayer.alive && !onePlayer.isDying) {
+              console.log('A player has died');
+              onePlayer['isDying'] = true;
+              sails.sockets.blast('death', onePlayer.serialize());
+
+              let killer;
+              try {
+                killer = await User.findOne({
+                  socketId: onePlayer.whoKilledMe.id
+                });
+              }
+              catch(nope) {
+                console.log(nope);
+                return;
+              }
+console.log('got killer:',killer);
+              try {
+                killer = await User.update({
+                  socketId: onePlayer.whoKilledMe.id
+                }, {
+                  kills: killer.kills+1
+                }).fetch();
+                killer = killer[0];
+              }
+              catch(nope) {
+                console.log(nope);
+                return;
+              }
+console.log('updated killer:',killer);
+
+console.log('want corpse:',onePlayer.id);
+
+              let corpse;
+              try {
+                corpse = await User.findOne({
+                  socketId: onePlayer.id
+                });
+              }
+              catch(nope) {
+                console.log(nope);
+                return;
+              }
+console.log('got corpse:',corpse);
+
+              try {
+                corpse = await User.update({
+                  socketId: onePlayer.id
+                }, {
+                  deaths: corpse.deaths+1
+                }).fetch();
+                corpse = corpse[0];
+              }
+              catch(nope) {
+                console.log(nope);
+                return;
+              }
+
+              console.log('attempting respawn of',corpse.socketId);
+
+              sails.hooks.game.gameObject.maps.lobby.respawn(sails.hooks.game.playerById(corpse.socketId));
+
+              // Reward killer
+            }
+          }
+        };
+
+        sails.hooks.game.gameObject.searchForDead = setInterval(searchForDead, 1000);
+
         console.log('Game hook loaded');
 
         // Send the signal that the game hook has been loaded;
@@ -48,6 +118,7 @@ module.exports = function GameHook(sails) {
 
       return done();
     },
+    searchForDead: undefined,
     gameRestartInterval: undefined,
     gameObject: undefined,
     stepIntervalId: undefined,

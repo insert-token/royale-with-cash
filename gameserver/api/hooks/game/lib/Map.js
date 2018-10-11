@@ -78,20 +78,34 @@ Map.prototype.getRandomPosition = function getRandomPosition() {
  * A player joined the map
  */
 Map.prototype.addPlayer = function addPlayer(player) {
+console.log('adding player',player);
+
   this.players.push(player);
   this.world.addBody(player.body);
-
-  if (this.players.length >= 2) {
+  if (this.players.length >= 2 && !this.started && !this.isStarting) {
     //enough players to start the game.
     sails.hooks.game.startGame('lobby');
   }
 };
+
+Map.prototype.respawn = function respawn(somePlayer) {
+  console.log(somePlayer.id,'is dead but hes getting better');
+
+  this.removePlayer(somePlayer);
+
+  setTimeout(()=> {
+    this.addPlayer(somePlayer);
+  }, 5000);
+
+};
+
 
 
 /**
  * A player left the map
  */
 Map.prototype.removePlayer = function removePlayer(player) {
+console.log('removing',player);
   this.players.splice(this.players.indexOf(player), 1);
   this.world.removeBody(player.body);
 };
