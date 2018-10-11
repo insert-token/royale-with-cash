@@ -1,24 +1,18 @@
-let vm = Vue({
-  el: '#stats',
+let vm = new Vue({
+  el: '#home-wrap',
   data: {
-    players: [{
-        name: 'Matt',
-        tokens: 5,
-        alive: false,
-        txlink: 'link'
-      },
-      {
-        name: 'Rob',
-        tokens: 0,
-        alive: true,
-        txlink: 'link'
-      },
-      {
-        name: 'Nick',
-        tokens: '2',
-        alive: false,
-        txlink: 'link'
-      }
-    ]
+    players: [
+
+    ],
+    updateIntervalId: undefined
+  },
+  mounted: function() {
+
+    this.updateIntervalId = setInterval(()=>{
+      this.players = window.g.remotePlayers.concat([ window.g.localPlayer ])
+    }, 1000);
+  },
+  methods: {
+
   }
-})
+});

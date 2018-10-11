@@ -1,55 +1,30 @@
-<div id="screen"></div>
-<div class="container">
-  <div class="row">
-    <div class="col-sm">
-      <h3>Game Statistics</h3>
-      <table id="stats" class="table table-sm">
-        <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Token(s)</th>
-            <th scope="col">Status</th>
-            <th scope="col">Tx Link</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="p in players">
-            <td>{{ p.name }}</td>
-            <td>{{ p.tokens }}</td>
-            <td><span class="badge badge-success">ALIVE</span></td>
-            <td>{{ p.txlink }}</td>
-          </tr>
-        </tbody>
-      </table>
+<div id="home-wrap">
+  
+  <div id="screen"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm">
+        <h3>Game Statistics</h3>
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Token(s)</th>
+              <th scope="col">Status</th>
+              <th scope="col">Tx Link</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="p in players">
+              <td>{{ p.name }}</td>
+              <td>{{ p.tokens }}</td>
+              <td><span class="badge badge-success">ALIVE</span></td>
+              <td>{{ p.txlink }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
+
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script>
-  let app = new Vue({
-    el: '#stats',
-    data: {
-      players: [{
-          name: 'Matt',
-          tokens: 5,
-          alive: false,
-          txlink: 'link'
-        },
-        {
-          name: 'Rob',
-          tokens: 0,
-          alive: true,
-          txlink: 'link'
-        },
-        {
-          name: 'Nick',
-          tokens: '2',
-          alive: false,
-          txlink: 'link'
-        }
-      ]
-    }
-  })
-
-</script>

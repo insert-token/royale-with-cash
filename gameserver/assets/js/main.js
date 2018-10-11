@@ -1,3 +1,4 @@
+
 (function(g) {
 
   g.WIDTH = 800;
@@ -51,7 +52,6 @@
   // a current copy of the map.
   function onSocketConnected(data) {
     g.sid = data.id;
-console.log('CONNNECTED!');
     // Set player name
     g.playerName = prompt('Please enter your name.') || 'Player';
     io.socket.post('/setPlayerName', { name: g.playerName });

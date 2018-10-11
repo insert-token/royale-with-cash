@@ -58,7 +58,7 @@ module.exports = {
     var text;
     switch (countdown) {
     case 4:
-      text = 'Game is startinsails.hooks.game.gameObject...';
+      text = 'Game is starting ...';
     break;
     case 3:
       text = '3';
