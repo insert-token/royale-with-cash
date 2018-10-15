@@ -6,8 +6,8 @@ services:
       dockerfile: ./docker/gameserver/Dockerfile
     command: nodemon server.js
     volumes:
-      - .:/usr/src/app/
+      - ./gameserver:/usr/src/app/
       - /usr/src/app/node_modules
     restart: always
     ports:
-      - "80:8000"
+      - "80:1337"
