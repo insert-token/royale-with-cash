@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/gameserver/Dockerfile
-    command: nodemon app.js
+    command: nodemon npm start
     volumes:
       - ./gameserver:/usr/src/app/
       - /usr/src/app/node_modules
