@@ -54,7 +54,7 @@ function Player(config) {
   this.attackDurDefault = config.attackDurDefault || 0.3;
   this.attackDur = this.attackDurDefault;
 
-  /**
+  /**respawn
    * attack damage
    */
   this.attackDamage = config.attackDamage || 25;
@@ -206,6 +206,8 @@ Player.prototype.update = function update(timeStep) {
  */
 Player.prototype.reset = function reset() {
   this.health = 100;
+  this.isDying = false;
+  this.whoKilledMe = {};
 };
 
 
@@ -230,15 +232,14 @@ Player.prototype.leaveMap = function leaveMap(map) {
 Player.prototype.respawn = function respawn() {
   console.log(`${this.name} is dead but hes getting better`);
 
-  setTimeout(()=> {
+  this.respawnProc = setTimeout(()=> {
     const map = sails.hooks.game.gameObject.maps[this.mapId];
     console.log(`${this.name} is respawning on ${this.mapId}`);
 
-    this.health = 100;
-    this.isDying = false;
-    this.whoKilledMe = {};
+    this.reset();
     this.leaveMap(map);
     this.joinMap(map);
+    clearTimeout(this.respawnProc);
   }, 2000);
 }
 

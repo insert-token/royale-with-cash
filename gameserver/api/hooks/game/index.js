@@ -154,6 +154,7 @@ module.exports = function GameHook(sails) {
 				return;
 			}
 
+			clearTimeout(player.respawnProc);
 			sails.hooks.game.gameObject.players.splice(sails.hooks.game.gameObject.players.indexOf(player), 1);
 			sails.sockets.broadcast(player.mapId, 'removePlayer', { id: socketObject.id });
 
