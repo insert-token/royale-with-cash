@@ -16,17 +16,19 @@
   io.socket.on('startGameCountdown', onStartGameCountdown);
   io.socket.on('resetGame', onResetGame);
   // io.socket.on('announceWinner', onAnnounceWinner);
-  io.socket.on('death', function(deadGuy) {
-    // if (deadGuy.id === window.g.localPlayer.id) {
-    //   // we ded
+  io.socket.on('death', (dead) => {
+    console.log(`${dead.whoKilledMe.name} killed ${dead.name}`);
 
-    //   $('html').html('<div style="font-size:6rem;color:black">YOU DED</div>');
-    //   window.setTimeout(function(){
-    //     window.location.href='./';
-    //   },2000);
-    // }
-    // console.log(deadGuy)
-  });
+    if (dead.id === g.localPlayer.id) {
+        // we ded
+        var middleText = g.hud.getAt(g.hud.middleText);
+        middleText.text = "YOU DED";
+        game.tweens.create(middleText).to({ alpha: 0 }, 2000, null, true).onComplete.addOnce(function() {
+            this.text = '';
+            this.alpha = 1;
+        }, middleText);
+    }
+});
 
   // Set player configuration
   g.sid = '';
@@ -223,7 +225,7 @@
     g.hud = game.add.group();
     g.hud.fixedToCamera = true;
     g.hud.classType = Phaser.Text;
-    var statusText = g.hud.create(g.WIDTH - 100, g.HEIGHT - 50, 'Connected: ' + g.connected + '\nLatency: ' + g.latency);
+    var statusText = g.hud.create(0, g.HEIGHT - 50, 'Connected: ' + g.connected + '\nLatency: ' + g.latency);
     g.hud.statusText = 0;
     statusText.fontSize = 16;
     statusText.align = 'right';
