@@ -248,8 +248,8 @@
       right: game.input.keyboard.isDown(Phaser.Keyboard.D),
       down: game.input.keyboard.isDown(Phaser.Keyboard.S),
       a: game.input.keyboard.isDown(Phaser.Keyboard.OPEN_BRACKET),
-      s: game.input.keyboard.isDown(Phaser.Keyboard.BACKWARD_SLASH),
-      d: game.input.keyboard.isDown(Phaser.Keyboard.CLOSED_BRACKET)
+      s: game.input.keyboard.isDown(Phaser.Keyboard.J),
+      d: game.input.keyboard.isDown(Phaser.Keyboard.K)
     });
 
     while (g.toAdd.length !== 0) {
