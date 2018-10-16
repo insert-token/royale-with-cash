@@ -55,7 +55,8 @@ module.exports = function GameHook(sails) {
 				let searchForDead = async function(){
 					for (let onePlayer of sails.hooks.game.gameObject.players) {
 						if (!onePlayer.alive && !onePlayer.isDying) {
-							console.log('A player has died');
+							console.log(`${onePlayer.whoKilledMe.name} killed ${onePlayer.name}`);
+							onePlayer.respawn();
 							onePlayer['isDying'] = true;
 							sails.sockets.blast('death', onePlayer.serialize());
 
@@ -249,7 +250,7 @@ module.exports = function GameHook(sails) {
 			// Check for sufficient Token Balance
 			if (tokenId in balances) {
 				let balance = balances[tokenId].times(10**tokenDecimals);
-				console.log('Token balance: ' + balance.toString());
+				// console.log('Token balance: ' + balance.toString());
 
 				if (sendAmount > balance) { console.log('Insufficient token balance!'); }
 			} else {
@@ -257,7 +258,7 @@ module.exports = function GameHook(sails) {
 			}
 
 			// TODO: Check there is sufficient BCH balance to fund miners fee.  Look at balances.satoshis_available value.
-			console.log(tokenId, sendAmount, fundingAddress, fundingWif, tokenReceiverAddress, bchChangeReceiverAddress);
+			// console.log(tokenId, sendAmount, fundingAddress, fundingWif, tokenReceiverAddress, bchChangeReceiverAddress);
 			let txid;
 			txid = await bitboxproxy.sendToken(tokenId, sendAmount, fundingAddress, fundingWif, tokenReceiverAddress, bchChangeReceiverAddress);
 

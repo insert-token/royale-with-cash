@@ -87,19 +87,6 @@ Map.prototype.addPlayer = function addPlayer(player) {
   }
 };
 
-Map.prototype.respawn = function respawn(somePlayer) {
-  console.log(somePlayer.id,'is dead but hes getting better');
-
-  this.removePlayer(somePlayer);
-
-  setTimeout(()=> {
-    this.addPlayer(somePlayer);
-  }, 5000);
-
-};
-
-
-
 /**
  * A player left the map
  */

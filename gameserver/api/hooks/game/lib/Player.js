@@ -227,6 +227,20 @@ Player.prototype.leaveMap = function leaveMap(map) {
   map.removePlayer(this);
 };
 
+Player.prototype.respawn = function respawn() {
+  console.log(`${this.name} is dead but hes getting better`);
+
+  setTimeout(()=> {
+    const map = sails.hooks.game.gameObject.maps[this.mapId];
+    console.log(`${this.name} is respawning on ${this.mapId}`);
+
+    this.health = 100;
+    this.isDying = false;
+    this.whoKilledMe = {};
+    this.leaveMap(map);
+    this.joinMap(map);
+  }, 2000);
+}
 
 /**
  * Update keys
@@ -274,7 +288,10 @@ Player.prototype.serialize = function serialize() {
     blocking: this.blocking,
     health: this.health,
     moving: this.moving,
-    whoKilledMe: this.whoKilledMe.id
+    whoKilledMe: {
+      id: this.whoKilledMe.id,
+      name: this.whoKilledMe.name
+    }
   };
 };
 
