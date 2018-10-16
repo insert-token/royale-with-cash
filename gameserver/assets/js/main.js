@@ -17,14 +17,15 @@
   io.socket.on('resetGame', onResetGame);
   // io.socket.on('announceWinner', onAnnounceWinner);
   io.socket.on('death', function(deadGuy) {
-    if (deadGuy.id === window.g.localPlayer.id) {
-      $('html').html('<div style="font-size:6rem;color:black">YOU DED</div>');
-      window.setTimeout(function(){
-        window.location.href='./';
-      },2000);
-    }
-    console.log('Im dead');
-    console.log(deadGuy);
+    // if (deadGuy.id === window.g.localPlayer.id) {
+    //   // we ded
+
+    //   $('html').html('<div style="font-size:6rem;color:black">YOU DED</div>');
+    //   window.setTimeout(function(){
+    //     window.location.href='./';
+    //   },2000);
+    // }
+    // console.log(deadGuy)
   });
 
   // Set player configuration
@@ -58,7 +59,7 @@
   }
 
   function onGetMap(data) {
-console.log('Got map data', data);
+    console.log('Got map data', data);
     if (data.map) {
       g.mapData[data.mapId] = data.map;
       if (!g.initialized) {
@@ -222,7 +223,7 @@ console.log('Got map data', data);
     g.hud = game.add.group();
     g.hud.fixedToCamera = true;
     g.hud.classType = Phaser.Text;
-    var statusText = g.hud.create(g.WIDTH - 100, 10, 'Connected: ' + g.connected + '\nLatency: ' + g.latency);
+    var statusText = g.hud.create(g.WIDTH - 100, g.HEIGHT - 50, 'Connected: ' + g.connected + '\nLatency: ' + g.latency);
     g.hud.statusText = 0;
     statusText.fontSize = 16;
     statusText.align = 'right';
@@ -265,24 +266,6 @@ console.log('Got map data', data);
     // Update HUD
     g.hud.getAt(g.hud.statusText).text = 'Connected: ' + g.connected + '\nLatency: ' + ~~(g.latency);
     g.hud.getAt(g.hud.healthText).text = 'Health: ' + ~~(g.localPlayer.health);
-
-    if (g.isLeader && !g.gameStarted) {
-      if ($('#startButton').prop('disabled')) {
-        $('#startButton').prop('disabled', false);
-      }
-    }
-    else if (!$('#startButton').prop('disabled')) {
-      $('#startButton').prop('disabled', true);
-    }
-
-    if (g.isLeader && g.gameStarted) {
-      if ($('#resetButton').prop('disabled')) {
-        $('#resetButton').prop('disabled', false);
-      }
-    }
-    else if (!$('#resetButton').prop('disabled')) {
-      $('#resetButton').prop('disabled', true);
-    }
   }
 
 
