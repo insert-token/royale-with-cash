@@ -71,7 +71,7 @@ module.exports = {
         return res.serverError(nope);
       }
 
-      sails.hooks.game.gameObject.players.push(new Player({ id: socket.id }));
+      sails.hooks.game.gameObject.players.push(new Player({ id: socket.id, name: user.name }));
 
       sails.sockets.broadcast(socket.id, 'connected', { id: socket.id, name: user.name });
 
@@ -120,7 +120,7 @@ module.exports = {
     req.session.user = user;
     req.session.save();
 
-    sails.hooks.game.gameObject.players.push(new Player({ id: socket.id }));
+    sails.hooks.game.gameObject.players.push(new Player({ id: socket.id, name: user.name }));
 
     sails.sockets.broadcast(socket.id, 'connected', { id: socket.id, name: user.name });
 
